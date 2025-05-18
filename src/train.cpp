@@ -23,23 +23,13 @@ int Train::getLength() {
         countOp = 0;
         return 0;
     }
-
     int length = 1;
-    countOp = 0;
-
-    Car* cur = first;
+    const Car* cur = first;
     while (cur->next != first) {
         cur = cur->next;
         ++length;
-        ++countOp;
     }
-
-    cur = first;
-    while (cur->prev != first) {
-        cur = cur->prev;
-        ++countOp;
-    }
-
+    countOp = 2 * length;
     return length;
 }
 
