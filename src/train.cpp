@@ -1,50 +1,41 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-#include <stdexcept>
+Train::Train() : first(nullptr), countOp(0) {}
 
-Train::Train() : entry_(nullptr), count_op_(0) {}
-
-Train::~Train() {
-  if (!entry_) return;
-
-  Car* cur = entry_->next;
-  while (cur != entry_) {
-    Car* next = cur->next;
-    delete cur;
-    cur = next;
-  }
-  delete entry_;
-}
-
-void Train::AddCar(bool light) {
-  Car* node = new Car(light);
-  if (!entry_) {
-    entry_ = node;
+void Train::addCar(bool light) {
+  Car* car = new Car{light, nullptr, nullptr};
+  if (!first) {
+    car->next = car;
+    car->prev = car;
+    first = car;
   } else {
-    Car* tail = entry_->prev;
-    tail->next = node;
-    node->prev = tail;
-    node->next = entry_;
-    entry_->prev = node;
+    Car* tail = first->prev;
+    tail->next = car;
+    car->prev = tail;
+    car->next = first;
+    first->prev = car;
   }
 }
 
-int Train::GetLength() {
-  if (!entry_) throw std::runtime_error("Train is empty");
+int Train::getLength() {
+  if (!first) return 0;
 
-  Car* cur = entry_;
+  countOp = 0;
+  Car* ptr = first;
   int len = 1;
-  cur = cur->next;
-  count_op_ = 0;
-  while (cur != entry_) {
-    cur = cur->next;
+  ptr = ptr->next;
+  ++countOp;
+
+  while (ptr != first) {
     ++len;
-    ++count_op_;
+    ptr = ptr->next;
+    ++countOp;
   }
+
   return len;
 }
 
-long long Train::GetOpCount() const {
-  return count_op_;
+int Train::getOpCount() {
+  return countOp;
 }
