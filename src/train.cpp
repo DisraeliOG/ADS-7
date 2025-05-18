@@ -1,4 +1,5 @@
 // Copyright 2021 NNTU-CS
+// Copyright 2021 NNTU-CS
 #include "train.h"
 
 Train::Train() {
@@ -37,7 +38,7 @@ int Train::getLength() {
     do {
         if (cur->light) {
             cur->light = false;
-            countOp += 2;
+            countOp++;
         }
         ++length;
         cur = cur->next;
