@@ -3,18 +3,30 @@
 
 Train::Train() : first(nullptr), countOp(0) {}
 
+Train::~Train() {
+  if (!first) return;
+
+  Car* cur = first->next;
+  while (cur != first) {
+    Car* next = cur->next;
+    delete cur;
+    cur = next;
+  }
+  delete first;
+}
+
 void Train::addCar(bool light) {
-  Car* car = new Car{light, nullptr, nullptr};
+  Car* new_car = new Car{light, nullptr, nullptr};
   if (!first) {
-    car->next = car;
-    car->prev = car;
-    first = car;
+    new_car->next = new_car;
+    new_car->prev = new_car;
+    first = new_car;
   } else {
     Car* tail = first->prev;
-    tail->next = car;
-    car->prev = tail;
-    car->next = first;
-    first->prev = car;
+    tail->next = new_car;
+    new_car->prev = tail;
+    new_car->next = first;
+    first->prev = new_car;
   }
 }
 
@@ -22,18 +34,27 @@ int Train::getLength() {
   if (!first) return 0;
 
   countOp = 0;
-  Car* ptr = first;
-  int len = 1;
-  ptr = ptr->next;
-  ++countOp;
+  Car* cur = first;
 
-  while (ptr != first) {
-    ++len;
-    ptr = ptr->next;
-    ++countOp;
+  cur->light = true;
+
+  for (int k = 1;; ++k) {
+    Car* probe = cur;
+    for (int i = 0; i < k; ++i) {
+      probe = probe->next;
+      ++countOp;
+    }
+
+    if (probe->light) {
+      return k;
+    } else {
+      probe->light = true;
+      for (int i = 0; i < k; ++i) {
+        probe = probe->prev;
+        ++countOp;
+      }
+    }
   }
-
-  return len;
 }
 
 int Train::getOpCount() {
