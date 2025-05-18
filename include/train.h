@@ -2,19 +2,29 @@
 #ifndef INCLUDE_TRAIN_H_
 #define INCLUDE_TRAIN_H_
 
+#include <cstddef>
+
 class Train {
  private:
   struct Car {
-    bool light; // состояние лампочки
-    Car *next;
-    Car *prev;
+    bool light;
+    Car* next;
+    Car* prev;
+    explicit Car(bool l) : light(l), next(this), prev(this) {}
   };
-  int countOp; // счетчик шагов (число переходов из вагона в вагон)
-  Car *first; // точка входа в поезд (первый вагон)
+
+  Car* first;
+  std::size_t countOp;
+
  public:
   Train();
-  void addCar(bool light); // добавить вагон с начальным состоянием лампочки
-  int getLength();          // вычислить длину поезда
-  int getOpCount();         // вернуть число переходов (из вагона в вагон)
+  ~Train();
+
+  void addCar(bool light);
+
+  std::size_t getLength();
+
+  std::size_t getOpCount() const;
 };
+
 #endif  // INCLUDE_TRAIN_H_
